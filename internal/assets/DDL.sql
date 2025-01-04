@@ -57,6 +57,24 @@ CREATE TABLE carts (
     CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_cart_user_id ON cart (user_id);
-CREATE INDEX idx_cart_product_id ON cart (product_id);
-CREATE INDEX idx_cart_deleted_at ON cart (deleted_at);
+CREATE INDEX idx_cart_user_id ON carts (user_id);
+CREATE INDEX idx_cart_product_id ON carts (product_id);
+CREATE INDEX idx_cart_deleted_at ON carts (deleted_at);
+
+CREATE TABLE checkouts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    cart_id UUID NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    payment_method VARCHAR(50) NOT NULL,
+    address TEXT NOT NULL,
+    logistic_provider VARCHAR(20) NOT NULL,
+    shipping_status VARCHAR(20) NOT NULL DEFAULT 'menunggu pembayaran',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cart_id) REFERENCES carts (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_checkout_cart_id ON checkouts (cart_id);
+CREATE INDEX idx_checkout_payment_status ON checkouts (payment_status);
+CREATE INDEX idx_checkout_shipping_status ON checkouts (shipping_status);
+CREATE INDEX idx_checkout_created_at ON checkouts (created_at);

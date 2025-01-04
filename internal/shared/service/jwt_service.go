@@ -35,27 +35,8 @@ func (j *jwtService) GenerateToken(user entity.User) (dto.AuthLoginResponseDto, 
 		return dto.AuthLoginResponseDto{}, fmt.Errorf("failed to create token: %v", err)
 	}
 
-	// Refresh Token
-	refreshClaims := model.Claim{
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    j.cfgToken.IssuerName,
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(j.cfgToken.RefreshJwtExpiresTime)),
-		},
-		UserID:   user.ID.String(),
-		Username: user.Username,
-		Email:    user.Email,
-	}
-
-	refreshToken := jwt.NewWithClaims(j.cfgToken.JwtSigningMethod, refreshClaims)
-	refreshTokenString, err := refreshToken.SignedString(j.cfgToken.JwtSignatureKy)
-	if err != nil {
-		return dto.AuthLoginResponseDto{}, fmt.Errorf("failed to create token: %v", err)
-	}
-
 	return dto.AuthLoginResponseDto{
-		AccessToken:  accessTokenString,
-		RefreshToken: refreshTokenString,
+		AccessToken: accessTokenString,
 	}, nil
 }
 

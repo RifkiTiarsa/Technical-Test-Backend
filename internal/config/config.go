@@ -24,11 +24,10 @@ type ApiConfig struct {
 }
 
 type TokenConfig struct {
-	IssuerName            string `json:"IssuerName"`
-	JwtSignatureKy        []byte `json:"JwtSignatureKy"`
-	JwtSigningMethod      *jwt.SigningMethodHMAC
-	AccessJwtExpiresTime  time.Duration
-	RefreshJwtExpiresTime time.Duration
+	IssuerName           string `json:"IssuerName"`
+	JwtSignatureKy       []byte `json:"JwtSignatureKy"`
+	JwtSigningMethod     *jwt.SigningMethodHMAC
+	AccessJwtExpiresTime time.Duration
 }
 
 type Config struct {
@@ -62,17 +61,15 @@ func (c *Config) readConfig() error {
 	c.ApiConfig = ApiConfig{ApiPort: getEnv("API_PORT", "8080")}
 
 	accessTokenExpire, _ := strconv.Atoi(getEnv("ACCESS_TOKEN_EXPIRE", "60"))
-	refreshTokenExpire, _ := strconv.Atoi(getEnv("REFRESH_TOKEN_EXPIRE", "24"))
 	c.TokenConfig = TokenConfig{
-		IssuerName:            getEnv("TOKEN_ISSUE", "rifkiTiarsa"),
-		JwtSignatureKy:        []byte(getEnv("TOKEN_SECRET", "sangatAmatRahasia")),
-		JwtSigningMethod:      jwt.SigningMethodHS256,
-		AccessJwtExpiresTime:  time.Duration(accessTokenExpire) * time.Minute,
-		RefreshJwtExpiresTime: time.Duration(refreshTokenExpire) * time.Hour,
+		IssuerName:           getEnv("TOKEN_ISSUE", "rifkiTiarsa"),
+		JwtSignatureKy:       []byte(getEnv("TOKEN_SECRET", "sangatAmatRahasia")),
+		JwtSigningMethod:     jwt.SigningMethodHS256,
+		AccessJwtExpiresTime: time.Duration(accessTokenExpire) * time.Minute,
 	}
 
 	if c.Host == "" || c.Port == "" || c.User == "" || c.Name == "" || c.Driver == "" || c.ApiPort == "" ||
-		c.IssuerName == "" || c.AccessJwtExpiresTime < 0 || c.RefreshJwtExpiresTime < 0 || len(c.JwtSignatureKy) == 0 {
+		c.IssuerName == "" || c.AccessJwtExpiresTime < 0 || len(c.JwtSignatureKy) == 0 {
 		return fmt.Errorf("missing required environment")
 	}
 

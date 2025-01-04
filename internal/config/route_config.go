@@ -13,4 +13,7 @@ const (
 
 	// Cart Route
 	AddCart = "/carts"
+
+	// Checkout Route
+	CreateCheckout = "/checkout"
 )

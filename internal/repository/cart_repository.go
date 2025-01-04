@@ -5,6 +5,7 @@ import (
 	"technical-test/internal/shared/common"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type cartRepository struct {
@@ -21,7 +22,7 @@ func (c *cartRepository) CreateCart(cart entity.Cart) (entity.CartResponse, erro
 
 		// Get product by id
 		var product entity.Product
-		if err := c.db.First(&product, "id = ?", cart.ProductID).Error; err != nil {
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&product, "id = ?", cart.ProductID).Error; err != nil {
 			return err
 		}
 
@@ -38,6 +39,10 @@ func (c *cartRepository) CreateCart(cart entity.Cart) (entity.CartResponse, erro
 		// Check existing cart
 		existingCart, err := c.GetCartByUserIdAndProductId(cart.UserID.String(), cart.ProductID.String())
 		if err == nil {
+			if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&existingCart, "id = ?", existingCart.ID).Error; err != nil {
+				return err
+			}
+
 			if existingCart.Quantity > product.Stock {
 				return err
 			}

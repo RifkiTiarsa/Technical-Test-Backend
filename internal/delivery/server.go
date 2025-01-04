@@ -18,6 +18,7 @@ type Server struct {
 	authUC     usecase.AuthUsecase
 	productUC  usecase.ProductUsecase
 	cartUC     usecase.CartUsecase
+	checkoutUC usecase.CheckoutUsecase
 	jwtService service.JwtService
 	engine     *gin.Engine
 	host       string
@@ -29,6 +30,7 @@ func (s Server) initRoute() {
 	handler.NewAuthHandler(s.authUC, rg).Route()
 	handler.NewProductHandler(s.productUC, rg).Route()
 	handler.NewCartHandler(s.cartUC, rg, authMiddleware).Route()
+	handler.NewCheckoutHandler(s.checkoutUC, rg, authMiddleware).Route()
 }
 
 func (s Server) Run() {
@@ -48,20 +50,27 @@ func NewServer() *Server {
 	}
 
 	jwtService := service.NewJwtService(cfg.TokenConfig)
+
 	userRepo := repository.NewUserRepository(db)
 	productRepo := repository.NewProductRepository(db)
 	cartRepo := repository.NewCartRepository(db)
+	checkoutRepo := repository.NewCheckoutRepository(db)
+
 	userUc := usecase.NewUserUsecase(userRepo)
 	authUc := usecase.NewAuthUsecase(userUc, jwtService)
 	productUc := usecase.NewProductUsecase(productRepo)
 	cartUc := usecase.NewCartUsecase(cartRepo)
+	checkoutUc := usecase.NewCheckoutUsecase(checkoutRepo)
+
 	engine := gin.Default()
+
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
 
 	return &Server{
 		authUC:     authUc,
 		productUC:  productUc,
 		cartUC:     cartUc,
+		checkoutUC: checkoutUc,
 		jwtService: jwtService,
 		engine:     engine,
 		host:       host,
