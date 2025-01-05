@@ -301,4 +301,37 @@ This repository contains solutions to the technical test for the position of Bac
 
 ---
 
+## Task 3: Bank Account System
+### Implementation on `/internal/bank_account_system`
+- Ensure thread-safety using mutex locks.
+- Operations supported: `Deposit` and `Withdraw`.
 
+## Task 4: Optimized SQL Query
+### Query
+```sql
+SELECT customer_id, SUM(amount) AS total_spent
+FROM orders
+WHERE order_date >= NOW() - INTERVAL '1 MONTH'
+GROUP BY customer_id
+ORDER BY total_spent DESC
+LIMIT 5;
+
+### Performance Improvements
+**Indexing**: Create a composite index on `(order_date, amount)` to optimize filtering and aggregation.
+   ```sql
+   CREATE INDEX idx_order_date_amount ON orders (order_date, amount);
+   ```
+
+## Task 5: Refactoring Monolithic Service
+### Approach to Refactoring
+1. **Identify Responsibilities**:
+   - Authentication
+   - File Uploads
+   - User Data Processing
+
+2. **Decompose into Microservices**:
+   - **Auth Service**: Handles user registration and authentication.
+   - **File Service**: Manages file uploads and storage.
+   - **User Service**: Processes and manages user data.
+
+3. As a junior, I don't have direct experience in ensuring backward compatibility during a system transition. However, I understand the importance of keeping the old system functioning properly during the migration to the new system. If given the opportunity to handle this, I would learn from the team's experience and strive to gain a deeper understanding of the strategies and tools used to ensure compatibility, such as API versioning or necessary testing.
