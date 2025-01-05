@@ -20,6 +20,24 @@ This repository contains solutions to the technical test for the position of Bac
 
 ---
 
+## Installation
+1. Clone Repository
+    ```bash
+   https://github.com/RifkiTiarsa/Technical-Test-Backend.git
+2. Run DDL.sql and DML.sql in the assets directory for initial data
+3. Create a .env file and copy the example that is in the env_example
+4. Install necessary dependencies
+   ```bash
+   go mod tidy
+5. Run the application for Task 1
+   ```bash
+   go run cmd/main.go
+6. Run the application for Task 3
+   ```bash
+   go run internal/bank_account_system.go
+
+---
+
 ## Task 1: API Design
 ### Features
 1. **User Registration and Authentication**
